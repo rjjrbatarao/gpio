@@ -10,7 +10,7 @@ func doSelect(nfd int, r *syscall.FdSet, w *syscall.FdSet, e *syscall.FdSet, tim
     if err == syscall.EINTR {
             // The system call was interrupted by a signal.
             // Loop and try again.
-        continue
+        return false, nil
     }
 	if err != nil {
 		return false, err
