@@ -4,9 +4,9 @@ import (
 	"syscall"
 )
 
-func mySelect(nfd int, readfds *syscall.FdSet, writefds *syscall.FdSet, exceptfds *syscall.FdSet, timeout *syscall.Timeval) error {
+func mySelect(nfd int, readfds *syscall.FdSet, writefds *syscall.FdSet, exceptfds *syscall.FdSet, timeout *syscall.Timeval) (n int, err error) {
     for {
-        err := syscall.Select(nfd, readfds, writefds, exceptfds, timeout)
+        n, err := syscall.Select(nfd, readfds, writefds, exceptfds, timeout)
         if err == syscall.EINTR {
             // The system call was interrupted by a signal.
             // Loop and try again.
@@ -14,10 +14,10 @@ func mySelect(nfd int, readfds *syscall.FdSet, writefds *syscall.FdSet, exceptfd
         }
         if err != nil {
             // A real error occurred.
-            return err
+            return n, err
         }
         // Success (or timeout reached without an error other than EINTR).
-        return nil
+        return n, nil
     }
 }
 
